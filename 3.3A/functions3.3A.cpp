@@ -46,6 +46,7 @@ sex:
 
 void FillFile(std::ofstream& outFile, DateStudent& currentStudent)
 {
+	// записываю каждое поле структуры в файл по отдельности
 	outFile.write(reinterpret_cast<char*>(&currentStudent.full_name), sizeof(currentStudent.full_name));
 	outFile.write(reinterpret_cast<char*>(&currentStudent.age), sizeof(short));
 	outFile.write(reinterpret_cast<char*>(&currentStudent.course), sizeof(short));
@@ -59,6 +60,7 @@ void FillFile(std::ofstream& outFile, DateStudent& currentStudent)
 
 bool ReadFile(std::ifstream& inFile, DateStudent& student) 
 {
+	// считываю каждое поле структуры из файла по отдельности
 	if (!inFile.read(reinterpret_cast<char*>(&student.full_name), sizeof(student.full_name)))
 		std::cout << "Error reading the structure field" << std::endl;
 		return false;
