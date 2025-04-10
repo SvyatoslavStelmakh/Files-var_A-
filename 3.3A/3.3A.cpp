@@ -20,7 +20,7 @@ int main()
 		return 0;
 	}
 
-	for (int i = 0; i < numberOfStudents; i++)	//заполняем файл структурными переменными с инфрмацией о студентах
+	for (int i = 0; i < numberOfStudents; i++)	//заполняем файл структурными переменными с информацией о студентах
 	{
 		FillDatabase(student);
 		FillFile(outFile, student);

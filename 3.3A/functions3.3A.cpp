@@ -29,8 +29,17 @@ sex:
 		std::cout << "incorrect value" << std::endl;
 		goto sex;
 	}
-	std::cout << "Enter marks sequentially(0-10): ";
-	for (int j = 0; j < 6; ++j)
+	
+average_mark:
+	//std::cout << "Enter marks sequentially(0-10): ";
+	std::cout << "Enter average mark: ";
+	std::cin >> currentStudent.average_mark;
+	if (currentStudent.average_mark < 1 || currentStudent.average_mark > 10)
+	{
+		std::cout << "incorrect value" << std::endl;
+		goto average_mark;
+	}
+	/*for (int j = 0; j < 6; ++j)
 	{
 	grade:
 			std::cin >> currentStudent.grade[j];
@@ -39,7 +48,7 @@ sex:
 				std::cout << "incorrect value" << std::endl;
 				goto grade;
 			}
-	}
+	}*/
 	std::cin.ignore();
 	
 }
@@ -47,21 +56,23 @@ sex:
 void FillFile(std::ofstream& outFile, DateStudent& currentStudent)
 {
 	// записываю каждое поле структуры в файл по отдельности
-	outFile.write(reinterpret_cast<char*>(&currentStudent.full_name), sizeof(currentStudent.full_name));
+	/*outFile.write(reinterpret_cast<char*>(&currentStudent.full_name), sizeof(currentStudent.full_name));
 	outFile.write(reinterpret_cast<char*>(&currentStudent.age), sizeof(short));
 	outFile.write(reinterpret_cast<char*>(&currentStudent.course), sizeof(short));
 	outFile.write(reinterpret_cast<char*>(&currentStudent.sex), sizeof(char));
 	for (int i = 0; i < 6; i++)
 	{
 		outFile.write(reinterpret_cast<char*>(&currentStudent.grade[i]), sizeof(double));
-	}
+	}*/
+
+	outFile.write(reinterpret_cast<char*>(&currentStudent), sizeof(DateStudent));
 	
 }
 
-bool ReadFile(std::ifstream& inFile, DateStudent& student) 
+void ReadFile(std::ifstream& inFile, DateStudent& currentStudent) 
 {
 	// считываю каждое поле структуры из файла по отдельности
-	if (!inFile.read(reinterpret_cast<char*>(&student.full_name), sizeof(student.full_name)))
+	/*if (!inFile.read(reinterpret_cast<char*>(&student.full_name), sizeof(student.full_name)))
 		std::cout << "Error reading the structure field" << std::endl;
 		return false;
 	if(!inFile.read(reinterpret_cast<char*>(&student.age), sizeof(short)))
@@ -81,28 +92,49 @@ bool ReadFile(std::ifstream& inFile, DateStudent& student)
 			return false;
 	}
 	
-	return true;
+	return true;*/
+
+	inFile.read(reinterpret_cast<char*>(&currentStudent), sizeof(DateStudent));
+
 }
 
-void FindUnderachievingStudents(std::ifstream& inFile, int course)
+void FindUnderachievingStudents(std::ifstream& inFile, int setCourse)
 {
 	int numberOfUnderachievers = 0;
 	DateStudent student;
 
-	std::cout << "Underachieving students" << std::endl;
-	while (ReadFile(inFile, student))
+	inFile.seekg(0, std::ios::end);
+	auto count = inFile.tellg() / sizeof(DateStudent);
+
+	if ((inFile.tellg() % sizeof(DateStudent) != 0) || count == 0)
 	{
-		if (student.course == course)
+		std::cout << "Wrong input file size" << std::endl;
+		return;
+	}
+
+	inFile.seekg(0, std::ios::beg);
+
+	std::cout << "Underachieving students: " << std::endl;
+	for (auto i = 0; i < count; i++)
+	{
+		ReadFile(inFile, student);
+		
+		if (student.course == setCourse)
 		{
-			for (int i = 0; i < 6; i++)
+			if (student.average_mark < 4)
 			{
-				if (student.grade[i] < 4)
+				std::cout << student.full_name << std::endl;
+				numberOfUnderachievers++;
+			}
+			/*for (int j = 0; j < 6; j++)
+			{
+				if (student.grade[j] < 4)
 				{
 					std::cout << student.full_name << std::endl;
 					numberOfUnderachievers++;
 					break;
 				}
-			}
+			}*/
 		}
 	}
 

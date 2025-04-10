@@ -14,7 +14,8 @@ struct DateStudent
 	short age = 17;
 	short course = 1;
 	char sex = 'm';
-	double grade[6]{ 0 };		//массив с средними баллами за 6 предметов;
+	double average_mark = 0;
+	//double grade[6]{ 0 };		//массив с средними баллами за 6 предметов;
 };
 #pragma pack(pop)	// pop возвращает настройки, которые были до push
 
