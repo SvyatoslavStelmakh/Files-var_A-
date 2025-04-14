@@ -55,45 +55,15 @@ average_mark:
 
 void FillFile(std::ofstream& outFile, DateStudent& currentStudent)
 {
-	// записываю каждое поле структуры в файл по отдельности
-	/*outFile.write(reinterpret_cast<char*>(&currentStudent.full_name), sizeof(currentStudent.full_name));
-	outFile.write(reinterpret_cast<char*>(&currentStudent.age), sizeof(short));
-	outFile.write(reinterpret_cast<char*>(&currentStudent.course), sizeof(short));
-	outFile.write(reinterpret_cast<char*>(&currentStudent.sex), sizeof(char));
-	for (int i = 0; i < 6; i++)
-	{
-		outFile.write(reinterpret_cast<char*>(&currentStudent.grade[i]), sizeof(double));
-	}*/
-
+	
 	outFile.write(reinterpret_cast<char*>(&currentStudent), sizeof(DateStudent));
 	
 }
 
-void ReadFile(std::ifstream& inFile, DateStudent& currentStudent) 
+void ReadFile(std::ifstream& inFile, DateStudent& currentStudent, int indexOfStudent) 
 {
-	// считываю каждое поле структуры из файла по отдельности
-	/*if (!inFile.read(reinterpret_cast<char*>(&student.full_name), sizeof(student.full_name)))
-		std::cout << "Error reading the structure field" << std::endl;
-		return false;
-	if(!inFile.read(reinterpret_cast<char*>(&student.age), sizeof(short)))
-		std::cout << "Error reading the structure field" << std::endl;
-		return false;
-	if(!inFile.read(reinterpret_cast<char*>(&student.course), sizeof(short)))
-		std::cout << "Error reading the structure field" << std::endl;
-		return false;
-	if(!inFile.read(reinterpret_cast<char*>(&student.sex), sizeof(char)))
-		std::cout << "Error reading the structure field" << std::endl;
-		return false;
-	
-	for (int i = 0; i < 6; i++)
-	{
-		if (!inFile.read(reinterpret_cast<char*>(&student.grade[i]), sizeof(double)))
-			std::cout << "Error reading the structure field" << std::endl;
-			return false;
-	}
-	
-	return true;*/
-
+	int sizeByte = sizeof(DateStudent);
+	inFile.seekg((indexOfStudent * sizeByte), std::ios::beg);
 	inFile.read(reinterpret_cast<char*>(&currentStudent), sizeof(DateStudent));
 
 }
@@ -117,7 +87,7 @@ void FindUnderachievingStudents(std::ifstream& inFile, int setCourse)
 	std::cout << "Underachieving students: " << std::endl;
 	for (auto i = 0; i < count; i++)
 	{
-		ReadFile(inFile, student);
+		ReadFile(inFile, student, i);
 		
 		if (student.course == setCourse)
 		{
@@ -126,15 +96,6 @@ void FindUnderachievingStudents(std::ifstream& inFile, int setCourse)
 				std::cout << student.full_name << std::endl;
 				numberOfUnderachievers++;
 			}
-			/*for (int j = 0; j < 6; j++)
-			{
-				if (student.grade[j] < 4)
-				{
-					std::cout << student.full_name << std::endl;
-					numberOfUnderachievers++;
-					break;
-				}
-			}*/
 		}
 	}
 

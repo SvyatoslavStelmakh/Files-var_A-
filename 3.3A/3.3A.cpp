@@ -20,6 +20,7 @@ int main()
 		return 0;
 	}
 
+	outFile.seekp(0, std::ios::beg);
 	for (int i = 0; i < numberOfStudents; i++)	//заполняем файл структурными переменными с информацией о студентах
 	{
 		FillDatabase(student);

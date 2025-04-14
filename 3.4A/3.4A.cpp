@@ -3,26 +3,41 @@
 int main()
 {
 	int numberOfStudents;
+	DateStudent student;
 
 	std::cout << "Enter number of students: ";
 	std::cin >> numberOfStudents;
 
-	DateStudent* pDatabase = new DateStudent[numberOfStudents];
-	FillDatabase(pDatabase, numberOfStudents);
-
 	std::ofstream outFile;
 	std::ifstream inFile;
 
-	outFile.open("Database.txt");
+	std::remove("Database.txt");	//удаляем файл перед заполнением, если он существует
+	outFile.open("Database.txt", std::ios::app);
 	if (!outFile)
 	{
-		std::cout << "Error" << std::endl;
+		std::cout << "Error opening the file for writing";
 		return 0;
 	}
 
-	FillFile(outFile, pDatabase, numberOfStudents);
+	for (int i = 0; i < numberOfStudents; i++)	//заполняем файл структурными переменными с информацией о студентах
+	{
+		FillDatabase(student);
+		FillFile(outFile, student);
+	}
 
 	outFile.close();
+
+	inFile.open("Database.txt");
+	if (!inFile)
+	{
+		std::cout << "Error opening the file for reading" << std::endl;
+		return 0;
+	}
+
+	inFile.seekg(0, std::ios::beg);		// перемещаем указатель чтения в начало
+	std::cout << "Database of students" << std::endl;
+	PrintDatabase(inFile, numberOfStudents);
+	inFile.close();
 
 	int course;
 	std::cout << "Enter the course where academic performance of students will be checked: ";
@@ -33,16 +48,17 @@ course:
 		std::cout << "incorrect value" << std::endl;
 		goto course;
 	}
-
+	
 	inFile.open("Database.txt");
+	inFile.seekg(0, std::ios::beg);		// перемещаем указатель чтения в начало
 	if (!inFile)
 	{
-		std::cout << "Error" << std::endl;
+		std::cout << "Error opening the file for reading" << std::endl;
 		return 0;
 	}
-
+	
 	FindUnderachievingStudents(inFile, course, numberOfStudents);
+	
 	inFile.close();
 
-	delete[] pDatabase;
 }
